@@ -16,5 +16,11 @@ Scene {
         NumberAnimation {property: "opacity"; easing.type: Easing.InOutQuad}
     }
 
+    // background
+    Rectangle {
+        anchors.fill: parent.gameWindowAnchorItem
+        color: "black"
+    }
+
 }
 

@@ -46,7 +46,8 @@ OBJECTS_DIR   = release
 SOURCES       = ..\Bianca-Zankl\main.cpp 
 OBJECTS       = release/main.o
 
-DIST          =   ..\Bianca-Zankl\main.cpp
+DIST          = qml/scenes/GameOverScene.qml \
+		qml/scenes/ControlsScene.qml  ..\Bianca-Zankl\main.cpp
 QMAKE_TARGET  = Bianca-Zankl
 DESTDIR        = release\ #avoid trailing-slash linebreak
 TARGET         = Bianca-Zankl.exe

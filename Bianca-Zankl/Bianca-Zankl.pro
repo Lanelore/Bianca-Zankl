@@ -34,3 +34,7 @@ ios {
     OTHER_FILES += $$QMAKE_INFO_PLIST
 }
 
+DISTFILES += \
+    qml/scenes/GameOverScene.qml \
+    qml/scenes/ControlsScene.qml
+

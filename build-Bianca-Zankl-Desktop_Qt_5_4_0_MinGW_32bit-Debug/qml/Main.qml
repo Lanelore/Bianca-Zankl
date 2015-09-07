@@ -4,8 +4,9 @@ import "scenes"
 
 GameWindow {
     id: window
-    width: 960
-    height: 640
+    width: 1024
+    height: 768
+
 
     // you get free licenseKeys as a V-Play customer or in your V-Play Trial
     // with a licenseKey, you get the best development experience:
@@ -24,8 +25,8 @@ GameWindow {
     MenuScene {
         id: menuScene
         // listen to the button signals of the scene and change the state according to it
-        onSelectLevelPressed: window.state = "selectLevel"
-        onCreditsPressed: window.state = "credits"
+        onStartGamePressed: window.state = "game"
+        onControlsPressed: window.state = "controls"
         // the menu scene is our start scene, so if back is pressed there we ask the user if he wants to quit the application
         onBackButtonPressed: {
             nativeUtils.displayMessageBox(qsTr("Really quit the game?"), "", 2);
@@ -40,6 +41,7 @@ GameWindow {
         }
     }
 
+    /*
     // scene for selecting levels
     SelectLevelScene {
         id: selectLevelScene
@@ -51,17 +53,18 @@ GameWindow {
         }
         onBackButtonPressed: window.state = "menu"
     }
+*/
 
-    // credits scene
-    CreditsScene {
-        id: creditsScene
+    // controls scene
+    ControlsScene {
+        id: controlsScene
         onBackButtonPressed: window.state = "menu"
     }
 
     // game scene to play a level
     GameScene {
         id: gameScene
-        onBackButtonPressed: window.state = "selectLevel"
+        onBackButtonPressed: window.state = "menu"
     }
 
     // menuScene is our first scene, so set the state to menu initially
@@ -75,15 +78,17 @@ GameWindow {
             PropertyChanges {target: menuScene; opacity: 1}
             PropertyChanges {target: window; activeScene: menuScene}
         },
+        /*
         State {
             name: "selectLevel"
             PropertyChanges {target: selectLevelScene; opacity: 1}
             PropertyChanges {target: window; activeScene: selectLevelScene}
         },
+        */
         State {
-            name: "credits"
-            PropertyChanges {target: creditsScene; opacity: 1}
-            PropertyChanges {target: window; activeScene: creditsScene}
+            name: "controls"
+            PropertyChanges {target: controlsScene; opacity: 1}
+            PropertyChanges {target: window; activeScene: controlsScene}
         },
         State {
             name: "game"

@@ -6,14 +6,14 @@ SceneBase {
     id: menuScene
 
     // signal indicating that the selectLevelScene should be displayed
-    signal selectLevelPressed
-    // signal indicating that the creditsScene should be displayed
-    signal creditsPressed
+    signal startGamePressed
+    // signal indicating that the controlsScene should be displayed
+    signal controlsPressed
 
     // background
-    Rectangle {
-        anchors.fill: parent.gameWindowAnchorItem
-        color: "#47688e"
+    Image {
+        anchors.fill: parent
+        source: "../../assets/img/BG.png"
     }
 
     // the "logo"
@@ -22,7 +22,7 @@ SceneBase {
         y: 30
         font.pixelSize: 30
         color: "#e9e9e9"
-        text: "MultiSceneMultiLevel"
+        text: "Bacilla"
     }
 
     // menu
@@ -30,24 +30,12 @@ SceneBase {
         anchors.centerIn: parent
         spacing: 10
         MenuButton {
-            text: "Levels"
-            onClicked: selectLevelPressed()
+            text: "Play"
+            onClicked: startGamePressed()
         }
         MenuButton {
-            text: "Credits"
-            onClicked: creditsPressed()
+            text: "Controls"
+            onClicked: controlsPressed()
         }
     }
-
-    // a little V-Play logo is always nice to have, right?
-    Image {
-        source: "../../assets/img/vplay-logo.png"
-        width: 60
-        height: 60
-        anchors.right: menuScene.gameWindowAnchorItem.right
-        anchors.rightMargin: 10
-        anchors.bottom: menuScene.gameWindowAnchorItem.bottom
-        anchors.bottomMargin: 10
-    }
 }
-
