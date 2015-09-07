@@ -9,8 +9,8 @@ Item {
     property bool gameOver: false  //indicates a gameover and shows gameovermessage
     property bool gamePaused: false //freezes the animations, the controls, the opponent and the powerupspawn
     //in the beginning while countdown is running and at the gameOver window
-    //lake
-    property real damping: 10
+
+    property real damping: 2
 
     //menu layout
     property color red: "red"

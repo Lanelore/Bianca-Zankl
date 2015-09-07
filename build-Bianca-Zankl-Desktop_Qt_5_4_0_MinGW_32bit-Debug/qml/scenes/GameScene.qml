@@ -33,6 +33,7 @@ SceneBase {
 
     // back button to leave scene
     MenuButton {
+        z: 3
         text: "Back"
         // anchor the button to the gameWindowAnchorItem to be on the edge of the screen on any device
         anchors.right: gameScene.gameWindowAnchorItem.right
@@ -64,15 +65,18 @@ SceneBase {
         running: countdown > 0
         onTriggered: {
             countdown--
-            //console.debug(countdown)
         }
     }
 
     Player{
         id: player
         z: 1
+        x: gameScene.width
+        y: gameScene.height
+/*
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
+        */
     }
 
 
@@ -95,7 +99,7 @@ SceneBase {
         height: gameScene.height // /2
         x: 0
         y: 0
-        z: 1000
+        z: 2
 
         Image {
             id: controlImage
@@ -128,8 +132,6 @@ SceneBase {
             ]
 
             onUpdated: {
-                console.debug("field updated")
-
                 player.playerCollider.linearDamping=0
                 player.playerBody.playing=true
 
@@ -223,9 +225,6 @@ SceneBase {
                 controlImage.y = newY;
 
                 didRegisterReferencePoint = true;
-
-                console.debug(controlImage.x);
-                console.debug(controlImage.y + "Hello?");
             }
 
             // slows down the character when releasing the finger from tablet
@@ -262,23 +261,14 @@ SceneBase {
                 playerTwoAxisController.xAxis = newPosX
                 playerTwoAxisController.yAxis = newPosY
 
-                /*
-                var angle = calcAngle(newPosX, newPosY) - 90
+                console.debug("X:" + newPosX);
+                console.debug("Y:" + newPosX);
 
-
-                if (newPosX!=0 && newPosY != 0){
-
-                    player.playerBody.rotation = angle
-                    player.playerCollider.rotation = angle
-                }
-                */
             }
 
             onPressed: {
                 touchStartTime = new Date().getTime()
                 didRegisterReferencePoint = false;
-
-                console.debug("pressed!");
             }
 
             onReleased: {
@@ -297,4 +287,45 @@ SceneBase {
     function calcAngle(touchX, touchY) {
         return -180 / Math.PI * Math.atan2(touchY, touchX)
     }
+
+
+    // place the 4 Borders around the playing field
+    Border {
+        id: borderLeft
+        width: 100
+        anchors {
+            right: parent.left
+            top: parent.top
+            bottom: parent.bottom
+        }
+    }
+
+    Border {
+        id: borderRight
+        width: 100
+        anchors {
+            left: parent.right
+            bottom: parent.bottom
+            top: parent.top
+        }
+    }
+
+    Border {
+        id: borderTop
+        height: 100
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom:parent.top
+        }
+    }
+
+    Border {
+        id: borderBottom
+        height: 100
+        width: parent.width
+        x: 0
+        y: parent.height //-height
+    }
+
 }
