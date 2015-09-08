@@ -21,7 +21,14 @@ EntityBase {
 
     onMassChanged: {
         size = mass / GameInfo.massValue
+
+        if (mass > 100){
+            GameInfo.victory = true
+            endGame()
+        }
     }
+
+    onEnabledChanged: player.visible = true
 
     TwoAxisController {
         id: twoAxisController
@@ -69,8 +76,7 @@ EntityBase {
 
     function onContact() {
         //check mass and so on
-        console.debug("onContact")
-        gameOver()
+        endGame()
     }
 
     function updatePosition() {
@@ -83,6 +89,23 @@ EntityBase {
             player.y = 0
         }else if (player.y < 0){
             player.y = field.height
+        }
+    }
+
+    function endGame(){
+        GameInfo.gamePaused = true;
+        player.visible = false;
+        GameInfo.score = mass;
+        endGameTimer.start();
+    }
+
+    Timer {
+        id: endGameTimer
+        interval: 1200
+        running: false
+        repeat: false
+        onTriggered: {
+            gameOver()
         }
     }
 }

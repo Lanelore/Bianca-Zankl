@@ -6,6 +6,8 @@ Item {
     id: gameInfo
 
     //statistic
+    property int score: 0
+    property bool victory: false
     property bool gameOver: false  //indicates a gameover and shows gameovermessage
     property bool gamePaused: true //freezes the animations, the controls, the opponent and the powerupspawn
     //in the beginning while countdown is running and at the gameOver window

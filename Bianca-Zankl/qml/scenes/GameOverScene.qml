@@ -1,6 +1,7 @@
 import VPlay 2.0
 import QtQuick 2.0
 import "../common"
+import ".."
 
 SceneBase {
     id: gameOverScene
@@ -27,9 +28,20 @@ SceneBase {
 
     Text {
         font.pixelSize: 20
-        text: "Game Over"
+        text: GameInfo.victory ? "Victory" : "Game Over"
         color: "black"
-        anchors.centerIn: parent
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.topMargin: parent.height/3
+    }
+
+    Text {
+        font.pixelSize: 10
+        text: "Score: " + GameInfo.score
+        color: "black"
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.topMargin: parent.height/2
     }
 }
 

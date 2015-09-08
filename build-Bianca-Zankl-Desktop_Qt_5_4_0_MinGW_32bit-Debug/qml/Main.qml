@@ -56,8 +56,6 @@ GameWindow {
     GameScene {
         id: gameScene
         onGameOver: {
-            console.debug ("gameOver function")
-            // selectedLevel is the parameter of the levelPressed signal
             window.state = "gameOver"
         }
         onBackButtonPressed: window.state = "menu"
