@@ -6,7 +6,7 @@ Item {
     id: gameInfo
 
     //statistic
-    property int score: 0
+    property double score: 0
     property bool victory: false
     property bool gameOver: false  //indicates a gameover and shows gameovermessage
     property bool gamePaused: true //freezes the animations, the controls, the opponent and the powerupspawn
@@ -44,5 +44,5 @@ Item {
     property bool visibleControls: true          // if the test level is selected, show the control graphic
 
     //mass
-    property double massValue: 0.75
+    property double massValue: 0.5
 }

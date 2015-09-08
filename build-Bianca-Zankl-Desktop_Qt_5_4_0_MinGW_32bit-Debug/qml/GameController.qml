@@ -215,6 +215,9 @@ EntityBase {
     }
 
     function reset(){
+        GameInfo.gamePaused = true
+        player.mass = 10;
+        GameInfo.score = player.mass;
         player.x = parent.width/2;
         player.y = parent.height/2;
         player.playerCollider.bodyType = Body.Static;

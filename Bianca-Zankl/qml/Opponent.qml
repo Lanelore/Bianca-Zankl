@@ -11,13 +11,12 @@ EntityBase {
     entityType: "opponent"
 
     property var opponent: opponent
-    signal contact()
 
     property alias opponentBody: opponentBody
     property alias opponentCollider: opponentCollider
     property alias opponentCoreCollider: opponentCoreCollider
     property int core: 5
-    property int size: 25
+    property double size: 25
     property double mass
     property int speed
     property int sceneWidth
@@ -56,45 +55,23 @@ EntityBase {
         x: radius
         y: radius
         anchors.centerIn: parent
-        /*
-             // handle the collision
-             fixture.onBeginContact: {
 
-                 var fixture = other;
-                 var body = other.parent;
-                 var component = other.parent.parent;
+        fixture.onBeginContact: {
+            // handle the collision and make the image semi-transparent
 
-                 var otherEntity = component.parent;
-                 var otherEntityId = component.parent.entityId;
-                 var otherEntityParent = otherEntity.parent;
+            var collidedEntity = other.parent.parent.parent;
+            var collidedEntityId = collidedEntity.entityId;
 
-                 // destroy the bullet if it collided with anything but lake or powerup
-                 if (otherEntityId.substring(0, 3) !== "lak" && otherEntityId.substring(0, 3) !== "pow") {
-                     singleBullet.destroy();
-
-                     entityManager.createEntityFromUrlWithProperties(
-                                 Qt.resolvedUrl("Splat.qml"), {
-                                     "z": 1,
-                                     "x": singleBullet.x,
-                                     "y": singleBullet.y,
-                                     "rotation": singleBullet.rotation
-                                 }
-                                 );
-
-                     // check if it hit a player
-                     if (otherEntityId.substring(0, 4) === "tank") {
-                         //if (otherEntityParent.entityId.substring(0, 6) === "player") {
-
-                         // call damage method on playerred/playerblue
-                         otherEntityParent.onDamageWithBulletType(bulletType);
-                     }
-                 }
-             }
-             */
+            // check if it hit a player
+            if (collidedEntityId.substring(0, 6) === "player") {
+                // call damage method on playerred/playerblue
+                collidedEntity.onContact(opponent);
+            }
+        }
     }
 
-    function onContact() {
-        //check mass and so on
+    function die() {
+        opponent.destroy()
     }
 
     MovementAnimation {
@@ -103,7 +80,7 @@ EntityBase {
         property: "x"
         minPropertyValue: -size/2
         velocity: speed
-        running: true
+        running: false
         onLimitReached: {
             opponent.destroy()
         }

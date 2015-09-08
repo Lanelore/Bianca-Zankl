@@ -56,8 +56,8 @@ SceneBase {
         text: countdown > 0 ? countdown : ""
         z: 3
         onEnabledChanged: {
-            GameInfo.gamePaused = true
             countdown = 3
+            GameInfo.gamePaused = true;
         }
     }
 
@@ -340,10 +340,39 @@ function calcAngle(touchX, touchY) {
         z: 2
     }
 
-
+/*
     Obstacle {
         id: obstacle
         x: 100
         y: 100
+    }
+*/
+
+    Opponent {
+        id: opponent1
+        x: 100
+        y: 100
+        size: 26
+    }
+
+    Opponent {
+        id: opponent2
+        x: 200
+        y: 100
+        size: 18
+    }
+
+    Opponent {
+        id: opponent3
+        x: 300
+        y: 100
+        size: 18
+    }
+
+    Opponent {
+        id: opponent4
+        x: 350
+        y: 100
+        size: 18
     }
 }

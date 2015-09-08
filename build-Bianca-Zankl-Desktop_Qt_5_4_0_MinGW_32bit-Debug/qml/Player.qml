@@ -8,16 +8,16 @@ EntityBase {
     entityType: "player"
 
     property var player: player
-    signal contact()
+    signal contact(var other)
 
     // make the twoAxisController acessible from outside
     property alias controller: twoAxisController
     property alias playerBody: playerBody
     property alias playerCollider: playerCollider
     property alias playerCoreCollider: playerCoreCollider
-    property int size: 25
+    property double size: 20
     property int core: 5
-    property double mass: 50
+    property double mass: 10
 
     onMassChanged: {
         size = mass / GameInfo.massValue
@@ -28,7 +28,10 @@ EntityBase {
         }
     }
 
-    onEnabledChanged: player.visible = true
+    onEnabledChanged: {
+        mass = size * GameInfo.massValue
+        player.visible = true
+    }
 
     TwoAxisController {
         id: twoAxisController
@@ -72,11 +75,32 @@ EntityBase {
         x: radius
         y: radius
         anchors.centerIn: parent
+
+        fixture.onBeginContact: {
+            // handle the collision and make the image semi-transparent
+
+            var collidedEntity = other.parent.parent.parent;
+            var collidedEntityId = collidedEntity.entityId;
+
+            // check if it hit a player
+            if (collidedEntityId.substring(0, 8) === "opponent") {
+                // call damage method on playerred/playerblue
+                onContact(collidedEntity);
+            }
+        }
     }
 
-    function onContact() {
+    function onContact(other) {
         //check mass and so on
-        endGame()
+
+        if(player.mass > other.mass){
+            player.mass += other.mass/10;
+            console.debug("Delete: " + other.entityId)
+            other.die();
+        }else{
+            console.debug("end Game")
+            endGame();
+        }
     }
 
     function updatePosition() {
