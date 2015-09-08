@@ -9,6 +9,9 @@ EntityBase {
     property var gameController: gameController
     z: 10
 
+    property alias player: player
+    property alias field: field
+
     Rectangle {
         // Object properties
         id: field
@@ -17,9 +20,6 @@ EntityBase {
         height: parent.height
         x: parent.x
         y: parent.y
-
-        property alias player: player
-        property alias field: field
 
         Image {
             id: controlImage
@@ -211,13 +211,15 @@ EntityBase {
     }
 
     function calcAngle(touchX, touchY) {
-        return -180 / Math.PI * Math.atan2(touchY, touchX)
+        return -180 / Math.PI * Math.atan2(touchY, touchX);
     }
 
     function reset(){
-        GameInfo.gamePaused = true
-        player.mass = 10;
-        GameInfo.score = player.mass;
+        //countdown = 3;
+        GameInfo.gamePaused = true;
+        player.mass = player.resetMass;
+        player.lastOpponent = "";
+        GameInfo.score = 0;
         player.x = parent.width/2;
         player.y = parent.height/2;
         player.playerCollider.bodyType = Body.Static;

@@ -11,6 +11,7 @@ SceneBase {
     property int countdown: 0
     // flag indicating if game is running
     property bool gameRunning: countdown == 0
+    property var player: gameController.player
 
     signal gameOver
 
@@ -42,9 +43,8 @@ SceneBase {
         anchors.top: gameScene.top
         anchors.topMargin: 10
         onClicked: {
-            backButtonPressed()
-//            GameInfo.gamePaused = true;
             reset()
+            backButtonPressed()
         }
     }
 
@@ -56,15 +56,15 @@ SceneBase {
         text: countdown > 0 ? countdown : ""
         z: 3
         onEnabledChanged: {
-            countdown = 3
-            GameInfo.gamePaused = true;
+            //GameInfo.gamePaused = true;
+            //countdown = 3
         }
     }
 
     // if the countdown is greater than 0, this timer is triggered every second, decreasing the countdown (until it hits 0 again)
     Timer {
         repeat: true
-        running: countdown > 0
+        running: countdown > 0 ? true : false
         onTriggered: {
             countdown--
               if(countdown==0) GameInfo.gamePaused = false
@@ -347,32 +347,41 @@ function calcAngle(touchX, touchY) {
         y: 100
     }
 */
-
+/*
     Opponent {
         id: opponent1
         x: 100
         y: 100
-        size: 26
+        mass: 26
     }
 
     Opponent {
         id: opponent2
         x: 200
         y: 100
-        size: 18
+        mass: 15
     }
 
     Opponent {
         id: opponent3
         x: 300
         y: 100
-        size: 18
+        mass: 14
     }
 
     Opponent {
         id: opponent4
         x: 350
         y: 100
-        size: 18
+        mass: 18
+    }
+*/
+
+    OpponentSpawn {
+        id: opponentSpawn
+        x: 0
+        y: 0
+        sceneWidth: parent.width
+        sceneHeight: parent.height
     }
 }

@@ -19,13 +19,17 @@ GameWindow {
     // create and remove entities at runtime
     EntityManager {
         id: entityManager
+        entityContainer: gameScene
     }
 
     // menu scene
     MenuScene {
         id: menuScene
         // listen to the button signals of the scene and change the state according to it
-        onStartGamePressed: window.state = "game"
+        onStartGamePressed: {
+            window.state = "game";
+            gameScene.countdown = 3;
+        }
         onControlsPressed: window.state = "controls"
         // the menu scene is our start scene, so if back is pressed there we ask the user if he wants to quit the application
         onBackButtonPressed: {

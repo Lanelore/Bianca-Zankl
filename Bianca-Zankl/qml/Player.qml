@@ -15,21 +15,19 @@ EntityBase {
     property alias playerBody: playerBody
     property alias playerCollider: playerCollider
     property alias playerCoreCollider: playerCoreCollider
-    property double size: 20
     property int core: 5
-    property double mass: 10
+    property double mass: resetMass
+    property double resetMass: 20
+    property string lastOpponent: ""
 
     onMassChanged: {
-        size = mass / GameInfo.massValue
-
-        if (mass > 100){
+        if (mass > 100){  // biggest opponent in game
             GameInfo.victory = true
             endGame()
         }
     }
 
     onEnabledChanged: {
-        mass = size * GameInfo.massValue
         player.visible = true
     }
 
@@ -38,8 +36,8 @@ EntityBase {
     }
 
     AnimatedImage {
-        width: size
-        height: size
+        width: mass
+        height: mass
         id: playerBody
         anchors.centerIn: parent
         playing: false
@@ -50,7 +48,7 @@ EntityBase {
         //collisionTestingOnlyMode: true
         sensor: true
         id: playerCollider
-        radius: size/2
+        radius: mass/2
         x: radius
         y: radius
         anchors.centerIn: parent
@@ -93,12 +91,11 @@ EntityBase {
     function onContact(other) {
         //check mass and so on
 
-        if(player.mass > other.mass){
+        if((player.mass > other.mass) && (other.entityId !== lastOpponent)){
+            lastOpponent = other.entityId;
             player.mass += other.mass/10;
-            console.debug("Delete: " + other.entityId)
             other.die();
-        }else{
-            console.debug("end Game")
+        }else if (player.mass <= other.mass){
             endGame();
         }
     }
@@ -119,7 +116,7 @@ EntityBase {
     function endGame(){
         GameInfo.gamePaused = true;
         player.visible = false;
-        GameInfo.score = mass;
+        GameInfo.score = (mass - resetMass) * 10;
         endGameTimer.start();
     }
 

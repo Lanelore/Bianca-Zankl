@@ -45,4 +45,7 @@ Item {
 
     //mass
     property double massValue: 0.5
+
+    property int opponentCount: 0
+    property int maxOpponents: 10
 }

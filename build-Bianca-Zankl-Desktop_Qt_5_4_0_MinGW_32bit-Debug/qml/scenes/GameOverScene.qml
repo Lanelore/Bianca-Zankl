@@ -37,11 +37,10 @@ SceneBase {
 
     Text {
         font.pixelSize: 10
-        text: "Score: " + GameInfo.score
+        text: "Score: " + Math.round(GameInfo.score * 100) / 100;
         color: "black"
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: parent.height/2
     }
 }
-
