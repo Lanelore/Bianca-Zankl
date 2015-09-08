@@ -20,9 +20,9 @@ EntityBase {
     }
 
     AnimatedImage {
+        width: 25
+        height: 25
         id: playerBody
-        width: 40
-        height: 40
         anchors.centerIn: parent
         playing: true
         source: "../assets/img/player.gif"
@@ -31,7 +31,7 @@ EntityBase {
     CircleCollider {
         //collisionTestingOnlyMode: true
         id: playerCollider
-        radius: 22
+        radius: playerBody.width/2
         x: radius
         y: radius
         anchors.centerIn: parent
@@ -40,15 +40,25 @@ EntityBase {
         restitution: GameInfo.gamePaused ? 0 : 0.4
         bullet: true
         linearDamping: GameInfo.gamePaused ? 1000000 : 100
-        //angularDamping: 0
 
         // this is applied every physics update tick
         linearVelocity: Qt.point(twoAxisController.xAxis * 100, twoAxisController.yAxis * (-100))
-        //force: Qt.point(twoAxisController.xAxis * 1000, twoAxisController.yAxis * 1000)
-        //torque: 1000
     }
 
     function onContact() {
         //check mass and so on
+    }
+
+    function updatePosition() {
+        if (player.x > field.width){
+            player.x = 0
+        }else if (player.x < 0){
+            player.x = field.width
+        }
+        if(player.y > field.height){
+            player.y = 0
+        }else if (player.y < 0){
+            player.y = field.height
+        }
     }
 }

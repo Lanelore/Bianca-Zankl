@@ -60,7 +60,7 @@
         <key>UILaunchImageName</key>
         <string>Def</string>
         <key>UILaunchImageOrientation</key>
-        <string>Portrait</string>
+        <string>Landscape</string>
         <key>UILaunchImageSize</key>
         <string>{320, 480}</string>
     </dict>
@@ -70,7 +70,7 @@
         <key>UILaunchImageName</key>
         <string>Def-568h</string>
         <key>UILaunchImageOrientation</key>
-        <string>Portrait</string>
+        <string>Landscape</string>
         <key>UILaunchImageSize</key>
         <string>{320, 568}</string>
     </dict>
@@ -80,7 +80,7 @@
         <key>UILaunchImageName</key>
         <string>Def-667h</string>
         <key>UILaunchImageOrientation</key>
-        <string>Portrait</string>
+        <string>Landscape</string>
         <key>UILaunchImageSize</key>
         <string>{375, 667}</string>
     </dict>

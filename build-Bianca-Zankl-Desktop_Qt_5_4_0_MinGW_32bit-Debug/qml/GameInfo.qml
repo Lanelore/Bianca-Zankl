@@ -16,7 +16,7 @@ Item {
     property color red: "red"
     property color blue: "blue"
     property int border: 4
-    property int radius: 10
+    property int radius: 50
     property double lighterColor: 1.7       //lighter colors are 70% lighter than normal colors
     property double pacity: 0.3             //because opacity is already taken
 

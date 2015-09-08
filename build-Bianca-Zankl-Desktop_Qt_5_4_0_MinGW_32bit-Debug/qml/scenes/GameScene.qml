@@ -22,7 +22,7 @@ SceneBase {
         id: world
         debugDrawVisible: false
         updatesPerSecondForPhysics: 10
-        z: 1110
+        //z: 1110
     }
 
     // background
@@ -36,9 +36,9 @@ SceneBase {
         z: 3
         text: "Back"
         // anchor the button to the gameWindowAnchorItem to be on the edge of the screen on any device
-        anchors.right: gameScene.gameWindowAnchorItem.right
+        anchors.right: gameScene.right
         anchors.rightMargin: 10
-        anchors.top: gameScene.gameWindowAnchorItem.top
+        anchors.top: gameScene.top
         anchors.topMargin: 10
         onClicked: {
             backButtonPressed()
@@ -67,19 +67,17 @@ SceneBase {
             countdown--
         }
     }
-
+    /*
     Player{
         id: player
         z: 1
-        x: gameScene.width
-        y: gameScene.height
-/*
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        */
+        x: gameScene.width/2
+        y: gameScene.height/2
     }
+*/
 
 
+    /*
     // ------------------------------------
     // Player Control Field
     // ------------------------------------
@@ -87,16 +85,16 @@ SceneBase {
         // Object properties
         id: field
         radius: GameInfo.radius
-        opacity: GameInfo.pacity
         color: "transparent"
-        border.width: GameInfo.border
-        border.color: GameInfo.red
+        //opacity: GameInfo.pacity
+        //border.width: GameInfo.border
+        //border.color: GameInfo.red
 
         property alias player: player
         property alias field: field
 
         width: gameScene.width
-        height: gameScene.height // /2
+        height: gameScene.height
         x: 0
         y: 0
         z: 2
@@ -104,11 +102,19 @@ SceneBase {
         Image {
             id: controlImage
             source: "../../assets/img/Control.png"
-            opacity: GameInfo.testLevel ? 100 : 0
+            opacity: GameInfo.testLevel ? GameInfo.pacity : 0
             x: gameScene.width - controlImage.width - 50
             y: 50
+            z: 2
             width: 100
             height: 100
+        }
+
+        Player{
+            id: player
+            z: 1
+            x: gameScene.width/2
+            y: gameScene.height/2
         }
 
         MultiPointTouchArea {
@@ -141,73 +147,73 @@ SceneBase {
                 newPosY = ((fieldPoint.y - referencePointY + controlImage.height / 2) / (controlImage.height / 2) - 1)
                 var distance = Math.sqrt((newPosX*newPosX) + (newPosY*newPosY)) //distance from center of the circle - radius
 
-                    // if no referencePoint is loaded yet, get one!
-                    if (didRegisterReferencePoint == false) {
-                        // save new reference point
-                        referencePointX = fieldPoint.x;
-                        referencePointY = fieldPoint.y;
+                // if no referencePoint is loaded yet, get one!
+                if (didRegisterReferencePoint == false) {
+                    // save new reference point
+                    referencePointX = fieldPoint.x;
+                    referencePointY = fieldPoint.y;
 
-                        // check if this reference point is within the playerMovementImage, if so then use the center of the playermovementimage as the new reference point
-                        if (referencePointX >= controlImage.x && referencePointX <= controlImage.x + controlImage.width &&
+                    // check if this reference point is within the playerMovementImage, if so then use the center of the playermovementimage as the new reference point
+                    if (referencePointX >= controlImage.x && referencePointX <= controlImage.x + controlImage.width &&
                             referencePointY >= controlImage.y && referencePointY <= controlImage.y + controlImage.height) {
-                            referencePointX = controlImage.x + controlImage.width / 2
-                            referencePointY = controlImage.y + controlImage.height / 2
-                        }
-
-                        updateControlImagePosition()
-                        return;
-                    }
-
-                    if (distance >1) {
-                        //angle is used to find a reference point at the border of the circular pad
-                        var angle = (Math.atan2(newPosX, newPosY) * 180 / Math.PI) -180
-                        angle = angle * (-1)
-                        angle -= 90
-
-                        //find a new reference point at the border of the circular pad
-                        var newX= (controlImage.width/2) * Math.cos((angle)*Math.PI/180) + referencePointX
-                        var newY= (controlImage.height/2) * Math.sin((angle)*Math.PI/180) + referencePointY
-
-                        //calculate the difference between the border reference point and the point outside of the pad
-                        var diffX = fieldPoint.x - newX
-                        var diffY = fieldPoint.y - newY
-
-                        //translate the pad in the new direction within the half of the field
-                        if((referencePointX + diffX) <= controlImage.width / 2){
-                            referencePointX = controlImage.width / 2
-                        }else if((referencePointX + diffX) >= (gameScene.width - controlImage.width/2)){
-                            referencePointX = gameScene.width - controlImage.width/2
-                        }else{
-                            referencePointX += diffX
-                        }
-
-                        if((referencePointY + diffY) <= controlImage.height / 2){
-                            referencePointY = controlImage.height / 2
-                        }else if((referencePointY + diffY) >= (gameScene.height - controlImage.height/2)){
-                            referencePointY = gameScene.height - controlImage.height/2
-                        }else{
-                            referencePointY += diffY
-                        }
+                        referencePointX = controlImage.x + controlImage.width / 2
+                        referencePointY = controlImage.y + controlImage.height / 2
                     }
 
                     updateControlImagePosition()
+                    return;
+                }
 
-                    // now do the actual control of the character
-                    player.playerCollider.linearDamping=0
-                    player.playerBody.playing=true
+                if (distance >1) {
+                    //angle is used to find a reference point at the border of the circular pad
+                    var angle = (Math.atan2(newPosX, newPosY) * 180 / Math.PI) -180
+                    angle = angle * (-1)
+                    angle -= 90
 
-                    newPosY = newPosY * -1
+                    //find a new reference point at the border of the circular pad
+                    var newX= (controlImage.width/2) * Math.cos((angle)*Math.PI/180) + referencePointX
+                    var newY= (controlImage.height/2) * Math.sin((angle)*Math.PI/180) + referencePointY
 
-                    if (newPosX > 1) newPosX = 1
-                    if (newPosY > 1) newPosY = 1
-                    if (newPosX < -1) newPosX = -1
-                    if (newPosY < -1) newPosY = -1
+                    //calculate the difference between the border reference point and the point outside of the pad
+                    var diffX = fieldPoint.x - newX
+                    var diffY = fieldPoint.y - newY
 
-                    // If the player is not touching the control area, slowly stop the body!
-                    if(player.playerBody.playing==false) damping()
+                    //translate the pad in the new direction within the half of the field
+                    if((referencePointX + diffX) <= controlImage.width / 2){
+                        referencePointX = controlImage.width / 2
+                    }else if((referencePointX + diffX) >= (gameScene.width - controlImage.width/2)){
+                        referencePointX = gameScene.width - controlImage.width/2
+                    }else{
+                        referencePointX += diffX
+                    }
 
-                    // update the movement
-                    updateMovement()
+                    if((referencePointY + diffY) <= controlImage.height / 2){
+                        referencePointY = controlImage.height / 2
+                    }else if((referencePointY + diffY) >= (gameScene.height - controlImage.height/2)){
+                        referencePointY = gameScene.height - controlImage.height/2
+                    }else{
+                        referencePointY += diffY
+                    }
+                }
+
+                updateControlImagePosition()
+
+                // now do the actual control of the character
+                player.playerCollider.linearDamping=0
+                player.playerBody.playing=true
+
+                newPosY = newPosY * -1
+
+                if (newPosX > 1) newPosX = 1
+                if (newPosY > 1) newPosY = 1
+                if (newPosX < -1) newPosX = -1
+                if (newPosY < -1) newPosY = -1
+
+                // If the player is not touching the control area, slowly stop the body!
+                if(player.playerBody.playing==false) damping()
+
+                // update the movement
+                updateMovement()
             }
 
             function updateControlImagePosition() {
@@ -229,7 +235,7 @@ SceneBase {
 
             // slows down the character when releasing the finger from tablet
             function damping(){
-                    player.playerCollider.linearDamping=GameInfo.damping
+                player.playerCollider.linearDamping=GameInfo.damping
             }
 
             // updates the speed/direction of the character
@@ -242,52 +248,46 @@ SceneBase {
                 newPosX = newPosX * GameInfo.maximumPlayerVelocity
                 newPosY = newPosY * GameInfo.maximumPlayerVelocity
 
-                /* normalise the speed! when driving diagonally the x and y speed is both 1
-                    when driving horizontally only either x or y is 1, which results in slower horizontal/vercial speed than diagonal speed
-                    so shrink x and y about the same ratio down so that their maximum speed will be 1 (or whatever specified) */
 
-                // calculate the distance from the center ( = speed)
-                var velocity = Math.sqrt(newPosX * newPosX + newPosY * newPosY)
-                var maxVelocity = GameInfo.maximumPlayerVelocity
 
-                if (velocity > maxVelocity) {
-                    // velocity is too high! shrink it down
-                    var shrinkFactor = maxVelocity / velocity
-                    newPosX = newPosX * shrinkFactor
-                    newPosY = newPosY * shrinkFactor
-                }
+    // calculate the distance from the center ( = speed)
+    var velocity = Math.sqrt(newPosX * newPosX + newPosY * newPosY)
+    var maxVelocity = GameInfo.maximumPlayerVelocity
 
-                // now update the twoAxisController with the calculated values
-                playerTwoAxisController.xAxis = newPosX
-                playerTwoAxisController.yAxis = newPosY
+    if (velocity > maxVelocity) {
+        // velocity is too high! shrink it down
+        var shrinkFactor = maxVelocity / velocity
+        newPosX = newPosX * shrinkFactor
+        newPosY = newPosY * shrinkFactor
+    }
 
-                console.debug("X:" + newPosX);
-                console.debug("Y:" + newPosX);
+        // now update the twoAxisController with the calculated values
+        playerTwoAxisController.xAxis = newPosX
+        playerTwoAxisController.yAxis = newPosY
+    }
 
-            }
+        onPressed: {
+            touchStartTime = new Date().getTime()
+            didRegisterReferencePoint = false;
+        }
 
-            onPressed: {
-                touchStartTime = new Date().getTime()
-                didRegisterReferencePoint = false;
-            }
+        onReleased: {
+            // reset touchUpdateCounter
+            onTouchUpdatedCounter = 0
 
-            onReleased: {
-                // reset touchUpdateCounter
-                onTouchUpdatedCounter = 0
+            // set playing to false
+            player.playerBody.playing=false
 
-                // set playing to false
-                player.playerBody.playing=false
-
-                // slow down character till it stops
-                damping()
-            }
+            // slow down character till it stops
+            damping()
         }
     }
+}
 
-    function calcAngle(touchX, touchY) {
-        return -180 / Math.PI * Math.atan2(touchY, touchX)
-    }
-
+function calcAngle(touchX, touchY) {
+    return -180 / Math.PI * Math.atan2(touchY, touchX)
+}
+*/
 
     // place the 4 Borders around the playing field
     Border {
@@ -328,4 +328,12 @@ SceneBase {
         y: parent.height //-height
     }
 
+    GameController {
+        id: gameController
+        width: gameScene.width
+        height: gameScene.height
+        x: 0
+        y: 0
+        z: 2
+    }
 }

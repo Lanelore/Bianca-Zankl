@@ -1,111 +1,31 @@
-import VPlay 2.0
 import QtQuick 2.0
-import "../common"
-import ".."
+import VPlay 2.0
+import "."
 
-SceneBase {
-    id:gameScene
-    // the filename of the current level gets stored here, it is used for loading the
-    property string activeLevelFileName
-    // the currently loaded level gets stored here
-    property variant activeLevel
-    // score
-    property int score: 0
-    // countdown shown at level start
-    property int countdown: 0
-    // flag indicating if game is running
-    property bool gameRunning: countdown == 0
+EntityBase {
+    id: gameController
+    entityId: "gameController"
+    entityType: "gameController"
+    z: 10
 
-
-    // physics world for collision detection
-    PhysicsWorld {
-        id: world
-        debugDrawVisible: false
-        updatesPerSecondForPhysics: 10
-        //z: 1110
-    }
-
-    // background
-    Image {
-        anchors.fill: parent
-        source: "../../assets/img/BG.png"
-    }
-
-    // back button to leave scene
-    MenuButton {
-        z: 3
-        text: "Back"
-        // anchor the button to the gameWindowAnchorItem to be on the edge of the screen on any device
-        anchors.right: gameScene.right
-        anchors.rightMargin: 10
-        anchors.top: gameScene.top
-        anchors.topMargin: 10
-        onClicked: {
-            backButtonPressed()
-            activeLevel = undefined
-            activeLevelFileName = ""
-        }
-    }
-
-    // text displaying either the countdown or ""
-    Text {
-        anchors.centerIn: parent
-        color: "white"
-        font.pixelSize: countdown > 0 ? 160 : 18
-        text: countdown > 0 ? countdown : ""
-        z: 2
-        onEnabledChanged: {
-            countdown = 3
-        }
-    }
-
-    // if the countdown is greater than 0, this timer is triggered every second, decreasing the countdown (until it hits 0 again)
-    Timer {
-        repeat: true
-        running: countdown > 0
-        onTriggered: {
-            countdown--
-        }
-    }
-    /*
-    Player{
-        id: player
-        z: 1
-        x: gameScene.width/2
-        y: gameScene.height/2
-    }
-*/
-
-
-    /*
-    // ------------------------------------
-    // Player Control Field
-    // ------------------------------------
     Rectangle {
         // Object properties
         id: field
-        radius: GameInfo.radius
         color: "transparent"
-        //opacity: GameInfo.pacity
-        //border.width: GameInfo.border
-        //border.color: GameInfo.red
+        width: parent.width
+        height: parent.height
+        x: parent.x
+        y: parent.y
 
         property alias player: player
         property alias field: field
 
-        width: gameScene.width
-        height: gameScene.height
-        x: 0
-        y: 0
-        z: 2
-
         Image {
             id: controlImage
-            source: "../../assets/img/Control.png"
+            source: "../assets/img/Control.png"
             opacity: GameInfo.testLevel ? GameInfo.pacity : 0
-            x: gameScene.width - controlImage.width - 50
+            x: parent.width - controlImage.width - 50
             y: 50
-            z: 2
             width: 100
             height: 100
         }
@@ -113,8 +33,8 @@ SceneBase {
         Player{
             id: player
             z: 1
-            x: gameScene.width/2
-            y: gameScene.height/2
+            x: parent.width/2
+            y: parent.height/2
         }
 
         MultiPointTouchArea {
@@ -181,16 +101,16 @@ SceneBase {
                     //translate the pad in the new direction within the half of the field
                     if((referencePointX + diffX) <= controlImage.width / 2){
                         referencePointX = controlImage.width / 2
-                    }else if((referencePointX + diffX) >= (gameScene.width - controlImage.width/2)){
-                        referencePointX = gameScene.width - controlImage.width/2
+                    }else if((referencePointX + diffX) >= (parent.width - controlImage.width/2)){
+                        referencePointX = parent.width - controlImage.width/2
                     }else{
                         referencePointX += diffX
                     }
 
                     if((referencePointY + diffY) <= controlImage.height / 2){
                         referencePointY = controlImage.height / 2
-                    }else if((referencePointY + diffY) >= (gameScene.height - controlImage.height/2)){
-                        referencePointY = gameScene.height - controlImage.height/2
+                    }else if((referencePointY + diffY) >= (parent.height - controlImage.height/2)){
+                        referencePointY = parent.height - controlImage.height/2
                     }else{
                         referencePointY += diffY
                     }
@@ -222,10 +142,10 @@ SceneBase {
                 var newY = referencePointY - controlImage.height / 2;
 
                 newX = Math.max(0, newX);
-                newX = Math.min(gameScene.width - controlImage.width, newX);
+                newX = Math.min(parent.width - controlImage.width, newX);
 
                 newY = Math.max(0, newY);
-                newY = Math.min(gameScene.height - controlImage.height, newY);
+                newY = Math.min(parent.height - controlImage.height, newY);
 
                 controlImage.x = newX;
                 controlImage.y = newY;
@@ -248,92 +168,45 @@ SceneBase {
                 newPosX = newPosX * GameInfo.maximumPlayerVelocity
                 newPosY = newPosY * GameInfo.maximumPlayerVelocity
 
+                /* normalise the speed! when driving diagonally the x and y speed is both 1
+                    when driving horizontally only either x or y is 1, which results in slower horizontal/vercial speed than diagonal speed
+                    so shrink x and y about the same ratio down so that their maximum speed will be 1 (or whatever specified) */
 
+                // calculate the distance from the center ( = speed)
+                var velocity = Math.sqrt(newPosX * newPosX + newPosY * newPosY)
+                var maxVelocity = GameInfo.maximumPlayerVelocity
 
-    // calculate the distance from the center ( = speed)
-    var velocity = Math.sqrt(newPosX * newPosX + newPosY * newPosY)
-    var maxVelocity = GameInfo.maximumPlayerVelocity
+                if (velocity > maxVelocity) {
+                    // velocity is too high! shrink it down
+                    var shrinkFactor = maxVelocity / velocity
+                    newPosX = newPosX * shrinkFactor
+                    newPosY = newPosY * shrinkFactor
+                }
 
-    if (velocity > maxVelocity) {
-        // velocity is too high! shrink it down
-        var shrinkFactor = maxVelocity / velocity
-        newPosX = newPosX * shrinkFactor
-        newPosY = newPosY * shrinkFactor
-    }
+                // now update the twoAxisController with the calculated values
+                playerTwoAxisController.xAxis = newPosX
+                playerTwoAxisController.yAxis = newPosY
+            }
 
-        // now update the twoAxisController with the calculated values
-        playerTwoAxisController.xAxis = newPosX
-        playerTwoAxisController.yAxis = newPosY
-    }
+            onPressed: {
+                touchStartTime = new Date().getTime()
+                didRegisterReferencePoint = false;
+            }
 
-        onPressed: {
-            touchStartTime = new Date().getTime()
-            didRegisterReferencePoint = false;
-        }
+            onReleased: {
+                // reset touchUpdateCounter
+                onTouchUpdatedCounter = 0
 
-        onReleased: {
-            // reset touchUpdateCounter
-            onTouchUpdatedCounter = 0
+                // set playing to false
+                player.playerBody.playing=false
 
-            // set playing to false
-            player.playerBody.playing=false
-
-            // slow down character till it stops
-            damping()
-        }
-    }
-}
-
-function calcAngle(touchX, touchY) {
-    return -180 / Math.PI * Math.atan2(touchY, touchX)
-}
-*/
-
-    // place the 4 Borders around the playing field
-    Border {
-        id: borderLeft
-        width: 100
-        anchors {
-            right: parent.left
-            top: parent.top
-            bottom: parent.bottom
+                // slow down character till it stops
+                damping()
+            }
         }
     }
 
-    Border {
-        id: borderRight
-        width: 100
-        anchors {
-            left: parent.right
-            bottom: parent.bottom
-            top: parent.top
-        }
-    }
-
-    Border {
-        id: borderTop
-        height: 100
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom:parent.top
-        }
-    }
-
-    Border {
-        id: borderBottom
-        height: 100
-        width: parent.width
-        x: 0
-        y: parent.height //-height
-    }
-
-    GameController {
-        id: gameController
-        width: gameScene.width
-        height: gameScene.height
-        x: 0
-        y: 0
-        z: 2
+    function calcAngle(touchX, touchY) {
+        return -180 / Math.PI * Math.atan2(touchY, touchX)
     }
 }
