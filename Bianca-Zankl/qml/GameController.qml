@@ -23,11 +23,13 @@ EntityBase {
         Image {
             id: controlImage
             source: "../assets/img/Control.png"
-            opacity: GameInfo.testLevel ? GameInfo.pacity : 0
-            x: parent.width - controlImage.width - 50
-            y: 50
-            width: 100
-            height: 100
+            opacity: GameInfo.visibleControls ? GameInfo.pacity : 0
+            x: resetX
+            y: resetY
+            width: 70
+            height: 70
+            property int resetX: 10
+            property int resetY: 10
         }
 
         Player{
@@ -208,5 +210,13 @@ EntityBase {
 
     function calcAngle(touchX, touchY) {
         return -180 / Math.PI * Math.atan2(touchY, touchX)
+    }
+
+    function reset(){
+        player.x = parent.width/2;
+        player.y = parent.height/2;
+        player.playerCollider.bodyType = Body.Static;
+        controlImage.x = controlImage.resetX;
+        controlImage.y = controlImage.resetY;
     }
 }

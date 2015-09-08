@@ -44,6 +44,10 @@ SceneBase {
             backButtonPressed()
             activeLevel = undefined
             activeLevelFileName = ""
+
+
+//            GameInfo.gamePaused = true;
+            gameController.reset()
         }
     }
 
@@ -53,8 +57,9 @@ SceneBase {
         color: "white"
         font.pixelSize: countdown > 0 ? 160 : 18
         text: countdown > 0 ? countdown : ""
-        z: 2
+        z: 3
         onEnabledChanged: {
+            GameInfo.gamePaused = true
             countdown = 3
         }
     }
@@ -65,6 +70,7 @@ SceneBase {
         running: countdown > 0
         onTriggered: {
             countdown--
+              if(countdown==0) GameInfo.gamePaused = false
         }
     }
     /*

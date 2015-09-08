@@ -24,7 +24,7 @@ EntityBase {
         height: 25
         id: playerBody
         anchors.centerIn: parent
-        playing: true
+        playing: false
         source: "../assets/img/player.gif"
     }
 
@@ -43,6 +43,10 @@ EntityBase {
 
         // this is applied every physics update tick
         linearVelocity: Qt.point(twoAxisController.xAxis * 100, twoAxisController.yAxis * (-100))
+
+        onBodyTypeChanged: {
+            playerCollider.bodyType = Body.Dynamic;
+        }
     }
 
     function onContact() {

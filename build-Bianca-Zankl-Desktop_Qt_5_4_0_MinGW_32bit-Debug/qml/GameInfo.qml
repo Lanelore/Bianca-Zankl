@@ -7,7 +7,7 @@ Item {
 
     //statistic
     property bool gameOver: false  //indicates a gameover and shows gameovermessage
-    property bool gamePaused: false //freezes the animations, the controls, the opponent and the powerupspawn
+    property bool gamePaused: true //freezes the animations, the controls, the opponent and the powerupspawn
     //in the beginning while countdown is running and at the gameOver window
 
     property real damping: 2
@@ -39,5 +39,5 @@ Item {
 
     //property string currentLevel: ""
 
-    property bool testLevel: true          // if the test level is selected, show the control graphic
+    property bool visibleControls: true          // if the test level is selected, show the control graphic
 }
