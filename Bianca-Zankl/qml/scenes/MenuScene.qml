@@ -16,24 +16,26 @@ SceneBase {
         source: "../../assets/img/BG.png"
     }
 
-    // the "logo"
-    Text {
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: 30
-        font.pixelSize: 30
-        color: "#e9e9e9"
-        text: "Bacilla"
-    }
+
 
     // menu
     Column {
         anchors.centerIn: parent
         spacing: 10
+
+        // the "logo"
+        Text {
+            font.pixelSize: 29
+            color: "black"
+            text: "Bacillus"
+        }
         MenuButton {
+            width: 100
             text: "Play"
             onClicked: startGamePressed()
         }
         MenuButton {
+            width: 100
             text: "Controls"
             onClicked: controlsPressed()
         }

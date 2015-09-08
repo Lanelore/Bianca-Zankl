@@ -28,7 +28,7 @@ EntityBase {
 
             // check if it hit a player
             if (collidedEntityId.substring(0, 6) === "player") {
-            console.debug ("Collided with Entitiy: " + collidedEntityId);
+    //        console.debug ("Collided with Entitiy: " + collidedEntityId);
                 collidedEntity.updatePosition();
             }
 
