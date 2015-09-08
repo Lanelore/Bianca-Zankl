@@ -40,4 +40,7 @@ Item {
     //property string currentLevel: ""
 
     property bool visibleControls: true          // if the test level is selected, show the control graphic
+
+    //mass
+    property double massValue: 0.75
 }

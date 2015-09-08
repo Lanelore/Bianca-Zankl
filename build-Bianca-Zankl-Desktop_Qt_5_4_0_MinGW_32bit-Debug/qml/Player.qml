@@ -14,24 +14,33 @@ EntityBase {
     property alias controller: twoAxisController
     property alias playerBody: playerBody
     property alias playerCollider: playerCollider
+    property alias playerCoreCollider: playerCoreCollider
+    property int size: 25
+    property int core: 5
+    property double mass: 50
+
+    onMassChanged: {
+        size = mass / GameInfo.massValue
+    }
 
     TwoAxisController {
         id: twoAxisController
     }
 
     AnimatedImage {
-        width: 25
-        height: 25
+        width: size
+        height: size
         id: playerBody
         anchors.centerIn: parent
         playing: false
-        source: "../assets/img/player.gif"
+        source: "../assets/img/Player.gif"
     }
 
     CircleCollider {
         //collisionTestingOnlyMode: true
+        sensor: true
         id: playerCollider
-        radius: playerBody.width/2
+        radius: size/2
         x: radius
         y: radius
         anchors.centerIn: parent
@@ -49,8 +58,19 @@ EntityBase {
         }
     }
 
+    CircleCollider {
+        collisionTestingOnlyMode: true
+        id: playerCoreCollider
+        radius: core/2
+        x: radius
+        y: radius
+        anchors.centerIn: parent
+    }
+
     function onContact() {
         //check mass and so on
+        console.debug("onContact")
+        gameOver()
     }
 
     function updatePosition() {

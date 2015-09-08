@@ -5,10 +5,6 @@ import ".."
 
 SceneBase {
     id:gameScene
-    // the filename of the current level gets stored here, it is used for loading the
-    property string activeLevelFileName
-    // the currently loaded level gets stored here
-    property variant activeLevel
     // score
     property int score: 0
     // countdown shown at level start
@@ -16,6 +12,11 @@ SceneBase {
     // flag indicating if game is running
     property bool gameRunning: countdown == 0
 
+    signal gameOver
+
+    function reset(){
+        gameController.reset()
+    }
 
     // physics world for collision detection
     PhysicsWorld {
@@ -42,12 +43,8 @@ SceneBase {
         anchors.topMargin: 10
         onClicked: {
             backButtonPressed()
-            activeLevel = undefined
-            activeLevelFileName = ""
-
-
 //            GameInfo.gamePaused = true;
-            gameController.reset()
+            reset()
         }
     }
 
@@ -341,5 +338,12 @@ function calcAngle(touchX, touchY) {
         x: 0
         y: 0
         z: 2
+    }
+
+
+    Obstacle {
+        id: obstacle
+        x: 100
+        y: 100
     }
 }

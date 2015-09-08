@@ -16,8 +16,6 @@ SceneBase {
         source: "../../assets/img/BG.png"
     }
 
-
-
     // menu
     Column {
         anchors.centerIn: parent

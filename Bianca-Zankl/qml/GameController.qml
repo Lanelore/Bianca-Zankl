@@ -6,6 +6,7 @@ EntityBase {
     id: gameController
     entityId: "gameController"
     entityType: "gameController"
+    property var gameController: gameController
     z: 10
 
     Rectangle {
@@ -26,6 +27,7 @@ EntityBase {
             opacity: GameInfo.visibleControls ? GameInfo.pacity : 0
             x: resetX
             y: resetY
+            z: 2
             width: 70
             height: 70
             property int resetX: 10

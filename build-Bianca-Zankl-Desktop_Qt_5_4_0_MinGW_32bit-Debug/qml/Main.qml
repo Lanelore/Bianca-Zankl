@@ -41,19 +41,10 @@ GameWindow {
         }
     }
 
-    /*
-    // scene for selecting levels
-    SelectLevelScene {
-        id: selectLevelScene
-        onLevelPressed: {
-            // selectedLevel is the parameter of the levelPressed signal
-            gameScene.setLevel(selectedLevel)
-            window.state = "game"
-
-        }
+    GameOverScene {
+        id: gameOverScene
         onBackButtonPressed: window.state = "menu"
     }
-*/
 
     // controls scene
     ControlsScene {
@@ -64,6 +55,11 @@ GameWindow {
     // game scene to play a level
     GameScene {
         id: gameScene
+        onGameOver: {
+            console.debug ("gameOver function")
+            // selectedLevel is the parameter of the levelPressed signal
+            window.state = "gameOver"
+        }
         onBackButtonPressed: window.state = "menu"
     }
 
@@ -77,14 +73,12 @@ GameWindow {
             name: "menu"
             PropertyChanges {target: menuScene; opacity: 1}
             PropertyChanges {target: window; activeScene: menuScene}
-        },
-        /*
+        }, 
         State {
-            name: "selectLevel"
-            PropertyChanges {target: selectLevelScene; opacity: 1}
-            PropertyChanges {target: window; activeScene: selectLevelScene}
+            name: "gameOver"
+            PropertyChanges {target: gameOverScene; opacity: 1}
+            PropertyChanges {target: window; activeScene: gameOverScene}
         },
-        */
         State {
             name: "controls"
             PropertyChanges {target: controlsScene; opacity: 1}
