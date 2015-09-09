@@ -21,6 +21,4 @@ Scene {
         anchors.fill: parent.gameWindowAnchorItem
         color: "black"
     }
-
 }
-

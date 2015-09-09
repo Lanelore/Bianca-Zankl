@@ -26,7 +26,6 @@ SceneBase {
         }
     }
 
-
     // menu
     Column {
         anchors.centerIn: parent

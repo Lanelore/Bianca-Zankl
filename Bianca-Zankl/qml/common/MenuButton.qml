@@ -2,6 +2,7 @@ import QtQuick 2.0
 
 Rectangle {
     id: button
+
     // this will be the default size, it is same size as the contained text + some padding
     width: buttonText.width+ paddingHorizontal*2
     height: buttonText.height+ paddingVertical*2
@@ -15,7 +16,7 @@ Rectangle {
     // the vertical margin from the Text element to the Rectangle at both the top and the bottom side.
     property int paddingVertical: 5
 
-    // access the text of the Text component
+    // access the text and the color of the Text component
     property alias text: buttonText.text
     property alias textColor: buttonText.color
 
@@ -39,4 +40,3 @@ Rectangle {
         onReleased: button.opacity = 1
     }
 }
-
