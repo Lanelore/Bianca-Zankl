@@ -19,10 +19,12 @@ EntityBase {
     property double mass: resetMass
     property double resetMass: 20
     property string lastOpponent: ""
+    property int lastMass: 0
 
     onMassChanged: {
         if (mass > 100){  // biggest opponent in game
             GameInfo.victory = true
+            victorySound.play()
             endGame()
         }
     }
@@ -33,6 +35,27 @@ EntityBase {
 
     TwoAxisController {
         id: twoAxisController
+    }
+
+    SoundEffectVPlay {
+        volume: 0.3
+        id: victorySound
+        // an ogg file is not playable on windows, because the extension is not supported!
+        source: "../assets/snd/Victory.wav"
+    }
+
+    SoundEffectVPlay {
+        volume: 0.1
+        id: gulpSound
+        // an ogg file is not playable on windows, because the extension is not supported!
+        source: "../assets/snd/Gulp.wav"
+    }
+
+    SoundEffectVPlay {
+        volume: 0.2
+        id: swallowSound
+        // an ogg file is not playable on windows, because the extension is not supported!
+        source: "../assets/snd/Swallow.wav"
     }
 
     AnimatedImage {
@@ -90,12 +113,24 @@ EntityBase {
 
     function onContact(other) {
         //check mass and so on
-
-        if((player.mass > other.mass) && (other.entityId !== lastOpponent)){
+        var sameOpponent = false;
+        if ((other.entityId === lastOpponent) && (other.mass === lastMass)){
+            sameOpponent = true;
+        }
+        if((player.mass > other.mass) && !sameOpponent){
+            gulpSound.play()
             lastOpponent = other.entityId;
-            player.mass += other.mass/10;
+            lastMass = other.mass;
+            if (other.mass/20 > 5) {
+                player.mass += 3;
+                console.debug("gain" + 3);
+            }else{
+                player.mass += other.mass/20;
+                console.debug("gain" + other.mass/20);
+            }
             other.die();
         }else if (player.mass <= other.mass){
+            swallowSound.play()
             endGame();
         }
     }

@@ -6,7 +6,7 @@ Rectangle {
     width: buttonText.width+ paddingHorizontal*2
     height: buttonText.height+ paddingVertical*2
 
-    color: "#D3D3D3"
+    color: "#69c64c"
     // round edges
     radius: 10
 
@@ -26,7 +26,8 @@ Rectangle {
         id: buttonText
         anchors.centerIn: parent
         font.pixelSize: 15
-        color: "black"
+        color: "#a7ff5f"
+        font.bold: true
     }
 
     MouseArea {

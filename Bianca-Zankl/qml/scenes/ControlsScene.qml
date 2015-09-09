@@ -27,19 +27,18 @@ SceneBase {
     Column {
         anchors.centerIn: parent
         spacing: 10
-
         // controls / settings
         Text {
             font.pixelSize: 20
             text: "Settings"
-            color: "black"
+            color: "#69c64c"
         }
 
         MenuButton {
             width: 150
             text: GameInfo.visibleControls ? "Controls visible" : "Controls invisible"
-            textColor: GameInfo.visibleControls ? "green" : "black"
-            opacity: 1
+            textColor: GameInfo.visibleControls ? "#69c64c" : "#a7ff5f"
+            color: GameInfo.visibleControls ? "#a7ff5f" : "#69c64c"
             onClicked: {
                 GameInfo.visibleControls ^= true
             }
@@ -48,8 +47,8 @@ SceneBase {
         MenuButton {
             width: 150
             text: settings.musicEnabled ? "Music enabled" : "Music disabled"
-            textColor: settings.musicEnabled ? "green" : "black"
-            opacity: 1
+            textColor: settings.musicEnabled ? "#69c64c" : "#a7ff5f"
+            color: settings.musicEnabled ? "#a7ff5f" : "#69c64c"
             onClicked:  {
                 settings.musicEnabled ^= true
             }
@@ -58,11 +57,22 @@ SceneBase {
         MenuButton {
             width: 150
             text: settings.soundEnabled ? "Sound enabled" : "Sound disabled"
-            textColor: settings.soundEnabled ? "green" : "black"
-            opacity: 1
+            textColor: settings.soundEnabled ? "#69c64c" : "#a7ff5f"
+            color: settings.soundEnabled ? "#a7ff5f" : "#69c64c"
             onClicked: {
                 settings.soundEnabled ^= true
             }
         }
+    }
+
+    // controls / settings
+    Text {
+        font.pixelSize: 6
+        text: "Bianca Zankl\nhttp://www.freesfx.co.uk/\nhttps://www.youtube.com/watch?v=E49uHVCLY0Q"
+        color: "#69c64c"
+        anchors.left: controlsScene.left
+        anchors.leftMargin: 10
+        anchors.bottom: controlsScene.bottom
+        anchors.bottomMargin: 10
     }
 }

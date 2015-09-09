@@ -8,9 +8,9 @@ EntityBase {
     property int sceneHeight: 768
     property int sceneWidth: 1024
 
-    property int timeMin: 200         // wait at least timeMin sec
-    property int timeSpan: 2500       // spawn between timeMin and timeMin + timeSpan sec
-    property int limit: Math.ceil(Math.random() * (timeSpan)+timeMin);
+    property int timeMin: 100         // wait at least timeMin sec
+    property int timeSpan: 1900       // spawn between timeMin and timeMin + timeSpan sec
+    property int limit: Math.ceil(Math.random() * (timeSpan) + timeMin);
 
     Timer {
         id: timer
@@ -22,7 +22,7 @@ EntityBase {
             //spawn items at random times
             limit = Math.ceil(Math.random() * (timeSpan) + timeMin);
 
-            if(GameInfo.opponentCount<GameInfo.maxOpponents){
+            if(GameInfo.opponentCount < GameInfo.maxOpponents){
                 spawnOpponent()
             }
         }

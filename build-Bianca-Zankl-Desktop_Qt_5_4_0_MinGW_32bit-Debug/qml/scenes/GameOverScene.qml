@@ -26,21 +26,33 @@ SceneBase {
         }
     }
 
-    Text {
-        font.pixelSize: 20
-        text: GameInfo.victory ? "Victory" : "Game Over"
-        color: "black"
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top
-        anchors.topMargin: parent.height/3
-    }
 
-    Text {
-        font.pixelSize: 10
-        text: "Score: " + Math.round(GameInfo.score * 100) / 100;
-        color: "black"
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top
-        anchors.topMargin: parent.height/2
+    // menu
+    Column {
+        anchors.centerIn: parent
+        spacing: 10
+        Text {
+            id: header
+            font.pixelSize: 20
+            text: GameInfo.victory ? "Victory" : "Game Over"
+            color: "#69c64c"
+/*
+            Text {
+                font.pixelSize: 10
+                text: "Score: " + Math.round(GameInfo.score);
+                color: "#69c64c"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: 30
+            }
+            */
+        }
+
+        Text {
+            font.pixelSize: 10
+            text: "Score: " + Math.round(GameInfo.score);
+            color: "#69c64c"
+            anchors.horizontalCenter: header.horizontalCenter
+        }
     }
 }

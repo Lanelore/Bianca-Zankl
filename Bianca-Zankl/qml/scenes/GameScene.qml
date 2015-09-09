@@ -45,13 +45,14 @@ SceneBase {
         onClicked: {
             reset()
             backButtonPressed()
+            countdown = 0;
         }
     }
 
     // text displaying either the countdown or ""
     Text {
         anchors.centerIn: parent
-        color: "white"
+        color: "#69c64c"
         font.pixelSize: countdown > 0 ? 160 : 18
         text: countdown > 0 ? countdown : ""
         z: 3

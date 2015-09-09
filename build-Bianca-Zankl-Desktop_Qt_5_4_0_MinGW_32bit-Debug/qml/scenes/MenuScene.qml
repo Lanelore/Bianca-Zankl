@@ -1,6 +1,8 @@
 import VPlay 2.0
 import QtQuick 2.0
+import QtMultimedia 5.0
 import "../common"
+import ".."
 
 SceneBase {
     id: menuScene
@@ -10,10 +12,18 @@ SceneBase {
     // signal indicating that the controlsScene should be displayed
     signal controlsPressed
 
+    BackgroundMusic {
+        loops: SoundEffect.Infinite
+        volume: 0.5
+        id: ambienceMusic
+        // an ogg file is not playable on windows, because the extension is not supported!
+        source: "../../assets/snd/Blue_Skies.wav"
+    }
+
     // background
     Image {
         anchors.fill: parent
-        source: "../../assets/img/BG.png"
+        source: "../../assets/img/Menu.png"
     }
 
     // menu
@@ -24,7 +34,7 @@ SceneBase {
         // the "logo"
         Text {
             font.pixelSize: 29
-            color: "black"
+            color: "#69c64c"
             text: "Bacillus"
         }
         MenuButton {

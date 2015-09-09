@@ -215,7 +215,9 @@ EntityBase {
     }
 
     function reset(){
-        //countdown = 3;
+        var toRemoveEntityTypes = ["opponent"];
+        entityManager.removeEntitiesByFilter(toRemoveEntityTypes);
+        GameInfo.victory = false;
         GameInfo.gamePaused = true;
         player.mass = player.resetMass;
         player.lastOpponent = "";
