@@ -6,16 +6,15 @@ import ".."
 
 SceneBase {
     id:gameScene
-    // score
+    // current score
     property int score: 0
     // countdown shown at level start
     property int countdown: 0
-    // flag indicating if game is running
-    property bool gameRunning: countdown == 0
+    // access the player from outside this class
     property var player: gameController.player
-
+    // switch to the gameOverScene with the help of the state machine in the Main
     signal gameOver
-
+    // reset the game scene with the help of the gameController reset function
     function reset(){
         gameController.reset()
     }
@@ -25,7 +24,6 @@ SceneBase {
         id: world
         debugDrawVisible: false
         updatesPerSecondForPhysics: 10
-        //z: 1110
     }
 
     // background
@@ -38,7 +36,7 @@ SceneBase {
     MenuButton {
         z: 3
         text: "Back"
-        // anchor the button to the gameWindowAnchorItem to be on the edge of the screen on any device
+        // anchor the button to the gameWindowAnchorItem to be on the top right of the scene
         anchors.right: gameScene.right
         anchors.rightMargin: 10
         anchors.top: gameScene.top
@@ -57,10 +55,6 @@ SceneBase {
         font.pixelSize: countdown > 0 ? 160 : 18
         text: countdown > 0 ? countdown : ""
         z: 3
-        onEnabledChanged: {
-            //GameInfo.gamePaused = true;
-            //countdown = 3
-        }
     }
 
     // if the countdown is greater than 0, this timer is triggered every second, decreasing the countdown (until it hits 0 again)
@@ -69,11 +63,11 @@ SceneBase {
         running: countdown > 0 ? true : false
         onTriggered: {
             countdown--
-              if(countdown==0) GameInfo.gamePaused = false
+            if(countdown==0) GameInfo.gamePaused = false
         }
     }
 
-    // place the 4 Borders around the playing field
+    // place the 4 Borders around the main playing field
     Border {
         id: borderLeft
         width: 100
@@ -112,6 +106,7 @@ SceneBase {
         y: parent.height
     }
 
+    // creates the gameController and the player in the gameScene
     GameController {
         id: gameController
         width: gameScene.width
@@ -121,6 +116,7 @@ SceneBase {
         z: 2
     }
 
+    // creates an opponent which spawns random opponents
     OpponentSpawn {
         id: opponentSpawn
         x: 0

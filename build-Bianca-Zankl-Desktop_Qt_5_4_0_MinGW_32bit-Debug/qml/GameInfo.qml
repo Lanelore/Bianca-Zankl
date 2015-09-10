@@ -6,20 +6,19 @@ Item {
     id: gameInfo
 
     // states
-    property double score: 0
-    property bool victory: false
-    property bool gamePaused: true      //freezes the animations, the controls, the opponent and the powerupspawn
-                                        //in the beginning while countdown is running and at the gameOver window
+    property double score: 0            // the player's score depending on how many opponents he defeated
+    property bool gamePaused: true      // freezes the animations, the controls, the opponent and the powerupspawn
+                                        // in the beginning while countdown is running and at the gameOver window
     // display
-    property double pacity: 0.3
-    property bool visibleControls: true          // if the test level is selected, show the control graphic
+    property double pacity: 0.3         // the opacity of the control image in the gameController
+    property bool visibleControls: true // show the control image depending on the player's settings
 
-    // Controller parameters
-    readonly property int onTouchUpdateCounterThreshold: 0 // change this to about 6 to prevent the cannon from changing the angle when shooting
-    readonly property double maximumPlayerVelocity: 1.4
-    property real damping: 2
+    // gameController
+    readonly property double maximumPlayerVelocity: 1.4     // the player's maximum speed
+    property real damping: 2                                // slows the player down when there's no input
 
     // opponents
-    property int opponentCount: 0
-    property int maxOpponents: 10
+    property int opponentCount: 0       // keeps track of the current amount of opponents on the field
+    property int maxOpponents: 10       // maxiumum opponents on the field at the same time
+    property int opponentId: 0
 }

@@ -8,21 +8,15 @@ GameWindow {
     width: 1024
     height: 768
 
-    onActiveChanged: {
-        settings.setValue("soundEnabled", true)
-        settings.soundEnabled= true
-        settings.musicEnabled = true
-    }
-
     // you get free licenseKeys as a V-Play customer or in your V-Play Trial
     // with a licenseKey, you get the best development experience:
     //  * No watermark shown
     //  * No license reminder every couple of minutes
     //  * No fading V-Play logo
     // you can generate one from http://v-play.net/license/trial, then enter it below:
-    // licenseKey: "A4E2F0BA4B13D37151FE743AEEBDD97981CD2F654D2A3D6F2DB9511330E3D823E4B0005071F07D3C808ED2294CC13FFF7E412EE149EAAE44FB90CFBFB068B393014AC35CD5D1FF76AF41F3DE9F2B02A6CC290852DFA944D833F975989D3982B3C6DFB2E52E75991BF623AC4D9C0FF374FB7783A8010F76A81F4A7D20FD9DCF24B1D2EEF4082D9B5AE6C2C47D66436E053FD490F68D206A5A033730C185F2614E54E2FBA7E0442B1E6D8E3D7C771D10CDE2DD2B37BC63DCB49E6554105D6654FD2E0D449F2ABA20B96B445D007E4236786E9771DE292E2FDEAB349DBD3C20B8131F3C9E97E23663A4D3A860E48B8955A984EBA63C55CFFF46476ADDB28F8E01CF5068159FAA2144E3F90DEFAD30972CF75E59D4D66411313509775AED321AF9E268393DD4B978225D373646FBAA60A81A"
+    // licenseKey: "2E811F9902367394DB130E686E978AE195399F9926EADA78CC8B31D2FAB2ACECE0626032BE6B54F53156DF8BDD48DE2F45359A6AA3062DF52AF0F2C7DE44AEEDD898B07E8A123B3D3F15B45541267DEACACE41346E266554470BD5CE87A9BC668F2E54B9ACA9AC7C6DF8DB0436CC446EAAB927B6559DC40D6F4FC9935A5A4FF3A805D74FBF24AC0B91D4DF63861246997845C461D25A342454D8025285FBFD86D013E889CFC47411AF3ABE20C485B50249C94A67136A29E2497FF4967535299B05AE2721B6832C74A0D8BDC68C078749262CAB9A72FE40F3F765459D2D3B0ABE489379BC7E0BCC54487654CAF1D6DFC3EE30CC6ECFDEC150434153611FF876B1333F4589EE5790274F063F0CABA47EBCA86E181313631EECD901E25B9CDB0E6CA795DAB0539197B7CBA076F337E55BBB"
 
-    // create and remove entities at runtime
+    // create and remove entities at runtime in the gameScene
     EntityManager {
         id: entityManager
         entityContainer: gameScene
@@ -34,7 +28,7 @@ GameWindow {
         // listen to the button signals of the scene and change the state according to it
         onStartGamePressed: {
             window.state = "game";
-            gameScene.countdown = 3;
+            gameScene.countdown = 3;    // starts the main countdown, the game unpauses after reaching 0
         }
         onControlsPressed: window.state = "controls"
         // the menu scene is our start scene, so if back is pressed there we ask the user if he wants to quit the application
@@ -51,12 +45,13 @@ GameWindow {
         }
     }
 
+    // game over scene after dying in the game
     GameOverScene {
         id: gameOverScene
         onBackButtonPressed: window.state = "menu"
     }
 
-    // controls scene
+    // controls scene with settings
     ControlsScene {
         id: controlsScene
         onBackButtonPressed: window.state = "menu"
@@ -65,9 +60,7 @@ GameWindow {
     // game scene to play a level
     GameScene {
         id: gameScene
-        onGameOver: {
-            window.state = "gameOver"
-        }
+        onGameOver: window.state = "gameOver"
         onBackButtonPressed: window.state = "menu"
     }
 
@@ -81,7 +74,7 @@ GameWindow {
             name: "menu"
             PropertyChanges {target: menuScene; opacity: 1}
             PropertyChanges {target: window; activeScene: menuScene}
-        }, 
+        },
         State {
             name: "gameOver"
             PropertyChanges {target: gameOverScene; opacity: 1}

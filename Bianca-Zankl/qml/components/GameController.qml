@@ -8,12 +8,14 @@ EntityBase {
     entityType: "gameController"
     z: 10
 
-    property var gameController: gameController
+    // make the player and the field accessible from the outside
     property alias player: player
     property alias field: field
 
+    // this field is the size of the screen
+    // it contains the MultiPointTouchArea with the same dimensions,
+    // the controlImage used to show and calculate the controls and the player
     Rectangle {
-        // Object properties
         id: field
         color: "transparent"
         width: parent.width
@@ -21,6 +23,7 @@ EntityBase {
         x: parent.x
         y: parent.y
 
+        // this image is used to calculate the player's movement and visualizes the controller
         Image {
             id: controlImage
             source: "../../assets/img/Control.png"
@@ -31,10 +34,12 @@ EntityBase {
             width: 70
             height: 70
 
+            // the controller can be moved around freely and needs to be reset after leaving the scene
             property int resetX: 10
             property int resetY: 10
         }
 
+        // add the calculated movement to the player
         Player{
             id: player
             z: 1
@@ -42,19 +47,24 @@ EntityBase {
             y: parent.height/2
         }
 
+        // the MultiPointTouchArea covers the whole screen and is disabled when the game is paused
         MultiPointTouchArea {
             enabled: GameInfo.gamePaused ? false : true
             anchors.fill: parent
 
+            // the referencePoint is the center of the circular controller pad
             property int referencePointX: 0
             property int referencePointY: 0
-            property bool didRegisterReferencePoint: false;
-            property real lastTime: 0
-            property real touchStartTime: 0
-            property int onTouchUpdatedCounter: 0
+
+            // after releasing the mouse or finger, a new reference point is needed
+            property bool didRegisterReferencePoint: false
+
+            // access the player's controller to add the calculated movement
             property variant playerTwoAxisController: player.getComponent("TwoAxisController")
-            property real oldPosX: 0.0
-            property real oldPosY: 0.0
+
+            // newPos is a point calculated from the center of the pad
+            // the values are converted and vary around 1 (= border of the circular pad)
+            // it is used to calculate the player's velocity
             property real newPosX: 0.0
             property real newPosY: 0.0
 
@@ -63,55 +73,60 @@ EntityBase {
             ]
 
             onUpdated: {
+                // if the player is being moved, play his animation and don't slow him down
                 player.playerCollider.linearDamping = 0
                 player.playerBody.playing = true
 
-                onTouchUpdatedCounter += 1
-
+                // calculate the difference between the current field point and the reference point
+                // add the radius and divide by the radius
+                // the result is a value around 1.; if it's bigger, the point was outside of the circle
+                // a smaller value means it was inside
+                // these two values are used to calculate a distance to the center of the circle
                 newPosX = ((fieldPoint.x - referencePointX + controlImage.width / 2) / (controlImage.width / 2) - 1)
                 newPosY = ((fieldPoint.y - referencePointY + controlImage.height / 2) / (controlImage.height / 2) - 1)
-                var distance = Math.sqrt((newPosX*newPosX) + (newPosY*newPosY)) //distance from center of the circle - radius
+                var distance = Math.sqrt((newPosX*newPosX) + (newPosY*newPosY))
 
-                // if no referencePoint is loaded yet, get one!
+                // if no reference point is loaded yet, get one
                 if (didRegisterReferencePoint == false) {
                     // save new reference point
                     referencePointX = fieldPoint.x;
                     referencePointY = fieldPoint.y;
 
-                    // check if this reference point is within the playerMovementImage, if so then use the center of the playermovementimage as the new reference point
-                    if (referencePointX >= controlImage.x && referencePointX <= controlImage.x + controlImage.width &&
-                            referencePointY >= controlImage.y && referencePointY <= controlImage.y + controlImage.height) {
-                        referencePointX = controlImage.x + controlImage.width / 2
-                        referencePointY = controlImage.y + controlImage.height / 2
-                    }
+                    // note that there is a reference point
+                    didRegisterReferencePoint = true;
 
+                    // reposition the control image
                     updateControlImagePosition()
                     return;
                 }
 
-                if (distance >1) {
-                    //angle is used to find a reference point at the border of the circular pad
+                // if the new point is outside of the movement circle
+                if (distance > 1) {
+                    // angle is used to find a reference point at the border of the circular pad
+                    // calculate the angle between two points (zero and newPos) and convert it in degrees and the right coordinate system
                     var angle = (Math.atan2(newPosX, newPosY) * 180 / Math.PI) -180
                     angle = angle * (-1)
                     angle -= 90
 
-                    //find a new reference point at the border of the circular pad
-                    var newX= (controlImage.width/2) * Math.cos((angle)*Math.PI/180) + referencePointX
-                    var newY= (controlImage.height/2) * Math.sin((angle)*Math.PI/180) + referencePointY
+                    // find a new reference point at the border of the circular pad
+                    // start from the old referencePoint and pick a new point with radius distance in the right direction
+                    var newX = (controlImage.width/2) * Math.cos((angle)*Math.PI/180) + referencePointX
+                    var newY = (controlImage.height/2) * Math.sin((angle)*Math.PI/180) + referencePointY
 
-                    //calculate the difference between the border reference point and the point outside of the pad
+                    // calculate the difference between the circle border reference point and the point outside of the pad
                     var diffX = fieldPoint.x - newX
                     var diffY = fieldPoint.y - newY
 
-                    //translate the pad in the new direction within the half of the field
+                    // calculate the new moved center of the cicular pad
+                    // make sure the new reference point leaves enough space (radius) for the circular pad or image
+                    // leave at least radius distance to each border
                     if((referencePointX + diffX) <= controlImage.width / 2){
                         referencePointX = controlImage.width / 2
-                    }else if((referencePointX + diffX) >= (parent.width - controlImage.width/2)){
-                        referencePointX = parent.width - controlImage.width/2
+                    }else if((referencePointX + diffX) >= (parent.width - controlImage.width / 2)){
+                        referencePointX = parent.width - controlImage.width / 2
                     }else{
                         referencePointX += diffX
                     }
-
                     if((referencePointY + diffY) <= controlImage.height / 2){
                         referencePointY = controlImage.height / 2
                     }else if((referencePointY + diffY) >= (parent.height - controlImage.height/2)){
@@ -121,20 +136,22 @@ EntityBase {
                     }
                 }
 
+                // reposition the control image according to the mouse or finger movement
                 updateControlImagePosition()
 
-                // now do the actual control of the character
-                player.playerCollider.linearDamping=0
-                player.playerBody.playing=true
+                // do the actual control of the character
+                player.playerCollider.linearDamping = 0
+                player.playerBody.playing = true
 
                 newPosY = newPosY * -1
 
+                // clamp the values between -1 and 1
                 if (newPosX > 1) newPosX = 1
                 if (newPosY > 1) newPosY = 1
                 if (newPosX < -1) newPosX = -1
                 if (newPosY < -1) newPosY = -1
 
-                // If the player is not touching the control area, slowly stop the body!
+                // If the player is not touching the control area, slowly stop the body
                 if(player.playerBody.playing==false) damping()
 
                 // update the movement
@@ -142,66 +159,60 @@ EntityBase {
             }
 
             function updateControlImagePosition() {
-                // move image to reference point
+                // referencePoint is the center, subtract the radius to get the top left corner of the image
                 var newX = referencePointX - controlImage.width / 2;
                 var newY = referencePointY - controlImage.height / 2;
 
+                // the value has to be positive to have the image inside of the field
+                // the value has to be small enough to be inside of the field, leave at least the width of the image
                 newX = Math.max(0, newX);
                 newX = Math.min(parent.width - controlImage.width, newX);
 
                 newY = Math.max(0, newY);
                 newY = Math.min(parent.height - controlImage.height, newY);
 
+                // assign the new position
                 controlImage.x = newX;
                 controlImage.y = newY;
-
-                didRegisterReferencePoint = true;
             }
 
-            // slows down the character when releasing the finger from tablet
+            // slows down the character after removing the finger from tablet / releasing the mouse
             function damping(){
-                player.playerCollider.linearDamping=GameInfo.damping
+                player.playerCollider.linearDamping=GameInfo.damping;
             }
 
-            // updates the speed/direction of the character
+            // updates the speed and direction of the character
             function updateMovement(){
-                // store the x and y values before they'll be altered
-                oldPosX=newPosX
-                oldPosY=newPosY
-
-                // Adjust the speed
+                // adjust the speed
                 newPosX = newPosX * GameInfo.maximumPlayerVelocity
                 newPosY = newPosY * GameInfo.maximumPlayerVelocity
 
-                /* normalise the speed! when driving diagonally the x and y speed is both 1
-                    when driving horizontally only either x or y is 1, which results in slower horizontal/vercial speed than diagonal speed
-                    so shrink x and y about the same ratio down so that their maximum speed will be 1 (or whatever specified) */
-                // calculate the distance from the center ( = speed)
+                // calculate the distance from the center ( = speed) with the pythagoras
                 var velocity = Math.sqrt(newPosX * newPosX + newPosY * newPosY)
                 var maxVelocity = GameInfo.maximumPlayerVelocity
 
                 if (velocity > maxVelocity) {
-                    // velocity is too high! shrink it down
+                    // velocity is too high, shrink it down
+                    // alter the points for the right velocity
                     var shrinkFactor = maxVelocity / velocity
                     newPosX = newPosX * shrinkFactor
                     newPosY = newPosY * shrinkFactor
                 }
 
                 // now update the twoAxisController with the calculated values
+                // the twoAxisController moves the player with this input
                 playerTwoAxisController.xAxis = newPosX
                 playerTwoAxisController.yAxis = newPosY
             }
 
-            onPressed: {
-                touchStartTime = new Date().getTime()
-                didRegisterReferencePoint = false;
-            }
+            // the user just clicked or touched the screen
+            // therefore we have the first point and don't have a reference point yet
+            onPressed: didRegisterReferencePoint = false
 
             onReleased: {
-                // reset touchUpdateCounter
-                onTouchUpdatedCounter = 0
+                didRegisterReferencePoint = false
 
-                // set playing to false
+                // stop the player's animation
                 player.playerBody.playing=false
 
                 // slow down character till it stops
@@ -210,24 +221,26 @@ EntityBase {
         }
     }
 
-    function calcAngle(touchX, touchY) {
-        return -180 / Math.PI * Math.atan2(touchY, touchX);
-    }
-
+    // reset the gameController and the player after leaving with the back button
     function reset(){
+        // remove all created opponents
         var toRemoveEntityTypes = ["opponent"];
         entityManager.removeEntitiesByFilter(toRemoveEntityTypes);
 
-        GameInfo.victory = false;
+        // pause the game and delete the score
         GameInfo.gamePaused = true;
         GameInfo.score = 0;
+        GameInfo.opponentId = 0;
 
+        // reset the player's values and stop his movement
+        player.bonus = 0;
         player.mass = player.resetMass;
-        player.lastOpponent = "";
+        player.lastOpponentId = 0;
         player.x = parent.width/2;
         player.y = parent.height/2;
         player.playerCollider.bodyType = Body.Static;
 
+        // reposition the control image
         controlImage.x = controlImage.resetX;
         controlImage.y = controlImage.resetY;
     }

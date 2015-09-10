@@ -15,7 +15,7 @@ SceneBase {
     // back button to leave scene
     MenuButton {
         text: "Back"
-        // anchor the button to the gameWindowAnchorItem to be on the edge of the screen on any device
+        // anchor the button to the gameWindowAnchorItem to be on the top right of the scene
         anchors.right: gameOverScene.right
         anchors.rightMargin: 10
         anchors.top: gameOverScene.top
@@ -26,17 +26,16 @@ SceneBase {
         }
     }
 
-    // menu
+    // game over message with score
     Column {
         anchors.centerIn: parent
         spacing: 10
         Text {
             id: header
             font.pixelSize: 20
-            text: GameInfo.victory ? "Victory" : "Game Over"
+            text: "Game Over"
             color: "#69c64c"
         }
-
         Text {
             font.pixelSize: 10
             text: "Score: " + Math.round(GameInfo.score);

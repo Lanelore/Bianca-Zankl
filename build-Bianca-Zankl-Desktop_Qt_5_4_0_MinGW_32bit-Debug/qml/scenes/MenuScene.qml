@@ -7,11 +7,12 @@ import ".."
 SceneBase {
     id: menuScene
 
-    // signal indicating that the selectLevelScene should be displayed
+    // signal indicating that the gameScene should be displayed
     signal startGamePressed
     // signal indicating that the controlsScene should be displayed
     signal controlsPressed
 
+    // music loops in every scene, can be muted in the controlsScene
     BackgroundMusic {
         loops: SoundEffect.Infinite
         volume: 0.5
@@ -26,11 +27,10 @@ SceneBase {
         source: "../../assets/img/Menu.png"
     }
 
-    // menu
+    // main menu
     Column {
         anchors.centerIn: parent
         spacing: 10
-
         // the "logo"
         Text {
             font.pixelSize: 29

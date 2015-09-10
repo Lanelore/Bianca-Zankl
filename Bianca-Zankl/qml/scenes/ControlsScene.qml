@@ -15,7 +15,7 @@ SceneBase {
     // back button to leave scene
     MenuButton {
         text: "Back"
-        // anchor the button to the gameWindowAnchorItem to be on the edge of the screen on any device
+        // anchor the button to the gameWindowAnchorItem to be on the top right of the scene
         anchors.right: controlsScene.right
         anchors.rightMargin: 10
         anchors.top: controlsScene.top
@@ -23,7 +23,7 @@ SceneBase {
         onClicked: backButtonPressed()
     }
 
-    // menu
+    // header and buttons
     Column {
         anchors.centerIn: parent
         spacing: 10
@@ -33,7 +33,7 @@ SceneBase {
             text: "Settings"
             color: "#69c64c"
         }
-
+        // used to show or hide the control image in the gameScene
         MenuButton {
             width: 150
             text: GameInfo.visibleControls ? "Controls visible" : "Controls invisible"
@@ -43,7 +43,7 @@ SceneBase {
                 GameInfo.visibleControls ^= true
             }
         }
-
+        // used to mute or play the main background music
         MenuButton {
             width: 150
             text: settings.musicEnabled ? "Music enabled" : "Music disabled"
@@ -53,7 +53,7 @@ SceneBase {
                 settings.musicEnabled ^= true
             }
         }
-
+        // used to mute or play the sound effects during the game
         MenuButton {
             width: 150
             text: settings.soundEnabled ? "Sound enabled" : "Sound disabled"
@@ -65,7 +65,7 @@ SceneBase {
         }
     }
 
-    // controls / settings
+    // credits on the bottem left of the scene
     Text {
         font.pixelSize: 6
         text: "Bianca Zankl\nhttp://www.freesfx.co.uk/\nhttps://www.youtube.com/watch?v=E49uHVCLY0Q"
