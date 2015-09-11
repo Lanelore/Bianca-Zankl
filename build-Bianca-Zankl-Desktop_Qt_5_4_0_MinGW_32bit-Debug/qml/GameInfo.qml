@@ -20,5 +20,10 @@ Item {
     // opponents
     property int opponentCount: 0       // keeps track of the current amount of opponents on the field
     property int maxOpponents: 10       // maxiumum opponents on the field at the same time
-    property int opponentId: 0
+    property int opponentId: 0          // make sure every opponent has a unique id
+
+    // mass
+    property int maxMass: 80            // the main character's maximum size
+    property double massGain: 0.05      // the percentage of mass the character gains after eating an opponent
+    property double maxGain: 5          // the maximum mass earned from eating an opponent
 }

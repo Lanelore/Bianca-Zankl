@@ -62,6 +62,9 @@ EntityBase {
             // access the player's controller to add the calculated movement
             property variant playerTwoAxisController: player.getComponent("TwoAxisController")
 
+            // newPos is a point calculated from the center of the pad
+            // the values are converted and vary around 1 (= border of the circular pad)
+            // it is used to calculate the player's velocity
             property real newPosX: 0.0
             property real newPosY: 0.0
 

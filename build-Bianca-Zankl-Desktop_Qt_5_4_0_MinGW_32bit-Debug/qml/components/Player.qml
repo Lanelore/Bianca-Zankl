@@ -18,8 +18,8 @@ EntityBase {
     property int core: 5
     property double mass: resetMass
     property double resetMass: 20
+    property double bonus: 0
     property int lastOpponentId: 0
-    property int bonus: 0
 
     // signals a contact between the player and an opponent
     signal contact(var other)
@@ -118,16 +118,20 @@ EntityBase {
             // count the other points as bonus points
             // the aquired mass depends on the opponent's size and has to be lower than 5
             // delete the opponent
-            if (player.mass >= 80){
-                if (other.mass/20 > 5) {
-                    player.bonus += 5;
+            if (player.mass >= GameInfo.maxMass){
+                if (other.mass * GameInfo.massGain > GameInfo.maxGain) {
+                    player.bonus += GameInfo.maxGain;
                 }else{
-                    player.bonus += other.mass/20;
+                    player.bonus += other.mass * GameInfo.massGain;
                 }
-            }else if (other.mass/20 > 5) {
-                player.mass += 5;
+            }else if (other.mass * GameInfo.massGain > GameInfo.maxGain) {
+                player.mass += GameInfo.maxGain;
             }else{
-                player.mass += other.mass/20;
+                player.mass += other.mass * GameInfo.massGain;
+                player.bonus += other.mass * GameInfo.massGain;
+            }
+            if (player.mass > GameInfo.maxMass){
+                player.mass = GameInfo.maxMass;
             }
             other.die();
 
@@ -158,7 +162,7 @@ EntityBase {
     function endGame(){
         GameInfo.gamePaused = true;
         player.visible = false;
-        GameInfo.score = (player.mass - player.resetMass) * 10 + player.bonus;
+        GameInfo.score = Math.round((player.mass - player.resetMass + player.bonus) * 10);
         endGameTimer.start();
     }
 

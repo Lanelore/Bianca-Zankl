@@ -38,9 +38,10 @@ SceneBase {
         }
         Text {
             font.pixelSize: 10
-            text: "Score: " + Math.round(GameInfo.score);
+            text: "Score: " + GameInfo.score;
             color: "#69c64c"
             anchors.horizontalCenter: header.horizontalCenter
+            font.bold: true
         }
     }
 }

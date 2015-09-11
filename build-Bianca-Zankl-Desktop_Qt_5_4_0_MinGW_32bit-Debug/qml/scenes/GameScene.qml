@@ -7,7 +7,7 @@ import ".."
 SceneBase {
     id:gameScene
     // current score
-    property int score: 0
+    //    property int score: 0
     // countdown shown at level start
     property int countdown: 0
     // access the player from outside this class
@@ -52,9 +52,22 @@ SceneBase {
     Text {
         anchors.centerIn: parent
         color: "#69c64c"
-        font.pixelSize: countdown > 0 ? 160 : 18
+        font.pixelSize: countdown > 0 ? 160 : 0
         text: countdown > 0 ? countdown : ""
         z: 3
+    }
+
+    // text displaying the current score
+    Text {
+        anchors.top: parent.top
+        anchors.topMargin: 10
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        color: "#69c64c"
+        font.pixelSize: 20
+        text: Math.round((player.mass - player.resetMass + player.bonus) * 10)
+        z: 3
+        font.bold: true
     }
 
     // if the countdown is greater than 0, this timer is triggered every second, decreasing the countdown (until it hits 0 again)
