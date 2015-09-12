@@ -6,8 +6,7 @@ import ".."
 
 SceneBase {
     id:gameScene
-    // current score
-    //    property int score: 0
+
     // countdown shown at level start
     property int countdown: 0
     // access the player from outside this class

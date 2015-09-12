@@ -139,10 +139,6 @@ EntityBase {
                 // reposition the control image according to the mouse or finger movement
                 updateControlImagePosition()
 
-                // do the actual control of the character
-                player.playerCollider.linearDamping = 0
-                player.playerBody.playing = true
-
                 newPosY = newPosY * -1
 
                 // clamp the values between -1 and 1
@@ -150,9 +146,6 @@ EntityBase {
                 if (newPosY > 1) newPosY = 1
                 if (newPosX < -1) newPosX = -1
                 if (newPosY < -1) newPosY = -1
-
-                // If the player is not touching the control area, slowly stop the body
-                if(player.playerBody.playing==false) damping()
 
                 // update the movement
                 updateMovement()
@@ -176,17 +169,13 @@ EntityBase {
                 controlImage.y = newY;
             }
 
-            // slows down the character after removing the finger from tablet / releasing the mouse
+            // slows down the character after removing the finger from the tablet / releasing the mouse
             function damping(){
-                player.playerCollider.linearDamping=GameInfo.damping;
+                player.playerCollider.linearDamping = GameInfo.damping;
             }
 
             // updates the speed and direction of the character
             function updateMovement(){
-                // adjust the speed
-                newPosX = newPosX * GameInfo.maximumPlayerVelocity
-                newPosY = newPosY * GameInfo.maximumPlayerVelocity
-
                 // calculate the distance from the center ( = speed) with the pythagoras
                 var velocity = Math.sqrt(newPosX * newPosX + newPosY * newPosY)
                 var maxVelocity = GameInfo.maximumPlayerVelocity
@@ -205,10 +194,8 @@ EntityBase {
                 playerTwoAxisController.yAxis = newPosY
             }
 
-            // the user just clicked or touched the screen
-            // therefore we have the first point and don't have a reference point yet
-            onPressed: didRegisterReferencePoint = false
-
+            // the user released the mouse or lifted the finger
+            // the next input will be a new touch with a new referene point
             onReleased: {
                 didRegisterReferencePoint = false
 

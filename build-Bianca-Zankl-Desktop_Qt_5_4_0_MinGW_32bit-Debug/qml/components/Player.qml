@@ -49,7 +49,7 @@ EntityBase {
     }
 
     // the player's visual representation, size depends on the current mass
-    // only playing when the he is moved across the screen
+    // only playing when he moves across the screen
     AnimatedImage {
         width: mass
         height: mass
